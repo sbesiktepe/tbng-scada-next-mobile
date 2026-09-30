@@ -1,0 +1,55 @@
+// TBNG SCADA for Android: a Trusted Web Activity. The app opens https://scada2.tbngltd.com
+// full screen in the phone's Chrome (same sign-in, charts, reports and downloads as the web).
+// Built by .github/workflows/android.yml; see README.md.
+plugins {
+    id "com.android.application"
+}
+
+def siteHost = System.getenv("TWA_HOST") ?: "scada2.tbngltd.com"
+def keystore = System.getenv("ANDROID_KEYSTORE_FILE")
+
+android {
+    namespace "com.tbngltd.scada"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.tbngltd.scada"
+        minSdk 23
+        targetSdk 34
+        versionCode((System.getenv("VERSION_CODE") ?: "1") as int)
+        versionName System.getenv("VERSION_NAME") ?: "1.0"
+        manifestPlaceholders = [hostName: siteHost]
+        resValue "string", "launchUrl", "https://" + siteHost + "/"
+        resValue "string", "assetStatements",
+            '[{ "relation": ["delegate_permission/common.handle_all_urls"], "target": {"namespace": "web", "site": "https://' + siteHost + '"}}]'
+    }
+
+    signingConfigs {
+        release {
+            if (keystore) {
+                storeFile file(keystore)
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // Without the TBNG key (GitHub secrets) the release build is signed with the debug key:
+            // it installs and works, but Chrome shows a small address bar at the top.
+            signingConfig keystore ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation "com.google.androidbrowserhelper:androidbrowserhelper:2.5.0"
+}
