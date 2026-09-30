@@ -4,10 +4,16 @@ Uygulama bir **Trusted Web Activity (TWA)**: telefondaki Chrome, `https://scada2
 sitesini adres çubuğu olmadan, tam ekran bir uygulama gibi açar. Giriş, grafikler, raporlar ve
 indirmeler web ile aynıdır; site güncellenince uygulama da güncellenmiş olur (yeni APK gerekmez).
 
+## APK'yı indirmek
+
+En kolayı: **https://github.com/sbesiktepe/tbng-scada-next-mobile/releases/latest** → Assets →
+`tbng-scada-N.apk` (telefondan da açılabilir; GitHub'a giriş yapılmış olmalı).
+
 ## APK üretmek (GitHub Actions)
 
 1. GitHub → depo → **Actions** → **Android app** → **Run workflow** (dal: çalışılan dal).
-2. İş bitince (3-5 dk) çalıştırmanın sayfasında **Artifacts → tbng-scada-apk** indirilir:
+2. İş bitince (2-3 dk) dosyalar **Releases** sayfasına da konur; ayrıca çalıştırmanın sayfasının
+   en altında **Artifacts → tbng-scada-apk** (zip) olarak durur:
    `tbng-scada-N.apk` (telefona kurulur), `tbng-scada-N.aab` (Play Store'a yüklenir),
    `certificate-sha256.txt` (imza parmak izi).
 
